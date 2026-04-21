@@ -7,6 +7,7 @@ interface Props {
   isLoading: boolean;
   refreshCountdown: number;
   isRecording: boolean;
+  hasTranscript: boolean;
   onRefresh: () => void;
   onClickSuggestion: (suggestion: Suggestion) => void;
 }
@@ -43,6 +44,7 @@ export default function SuggestionsPanel({
   isLoading,
   refreshCountdown,
   isRecording,
+  hasTranscript,
   onRefresh,
   onClickSuggestion,
 }: Props) {
@@ -64,7 +66,8 @@ export default function SuggestionsPanel({
       <div className="flex items-center justify-between px-4 py-3 border-b border-[#252838]">
         <button
           onClick={onRefresh}
-          disabled={isLoading}
+          disabled={isLoading || !hasTranscript}
+          title={!hasTranscript ? 'Start recording first' : undefined}
           className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-[#1e2130] hover:bg-[#252838] text-gray-300 text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <RefreshIcon spinning={isLoading} />

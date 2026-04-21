@@ -74,7 +74,7 @@ export default function ChatPanel({ messages, isStreaming, onSend }: Props) {
             value={input}
             onChange={handleInput}
             onKeyDown={handleKeyDown}
-            placeholder="Ask anything\u2026"
+            placeholder="Ask anything…"
             rows={1}
             className="flex-1 resize-none bg-[#1a1d2e] border border-[#252838] rounded-lg px-3 py-2 text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-[#3b4168] transition-colors"
           />
@@ -86,7 +86,7 @@ export default function ChatPanel({ messages, isStreaming, onSend }: Props) {
             Send
           </button>
         </div>
-        <p className="text-xs text-gray-600 mt-1">Enter to send \u00b7 Shift+Enter for newline</p>
+        <p className="text-xs text-gray-600 mt-1">Enter to send · Shift+Enter for newline</p>
       </div>
     </div>
   );
@@ -98,7 +98,7 @@ function MessageBubble({ message }: { message: ChatMessage }) {
   return (
     <div className={`flex flex-col gap-1 ${isUser ? 'items-end' : 'items-start'}`}>
       <span className="text-xs text-gray-600">
-        {isUser ? 'You' : 'Assistant'} \u00b7{' '}
+        {isUser ? 'You' : 'Assistant'} ·{' '}
         {new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
       </span>
       <div
@@ -125,7 +125,7 @@ function InfoCard() {
     <div className="p-3 rounded-lg bg-[#1a1d2e] border border-[#252838] text-sm text-gray-400 leading-relaxed">
       Clicking a suggestion adds it to this chat and streams a detailed answer (separate
       prompt, more context). You can also type questions directly. One continuous chat per
-      session \u2014 no login, no persistence.
+      session — no login, no persistence.
     </div>
   );
 }

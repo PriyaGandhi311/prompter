@@ -40,6 +40,8 @@ export default function Home() {
   const chatMessagesRef = useRef(chatMessages);
   // Allows startCycle (defined before fetchSuggestions) to call it without a stale closure
   const fetchSuggestionsRef = useRef<() => Promise<void>>(() => Promise.resolve());
+  // Prevents concurrent suggestion fetches (countdown + recording cycle fire at the same time)
+  const isFetchingRef = useRef(false);
 
   useEffect(() => { settingsRef.current = settings; }, [settings]);
   useEffect(() => { chunksRef.current = transcriptChunks; }, [transcriptChunks]);
@@ -141,7 +143,9 @@ export default function Home() {
     if (!s.groqApiKey) return;
     const chunks = chunksRef.current;
     if (chunks.length === 0) return;
+    if (isFetchingRef.current) return;
 
+    isFetchingRef.current = true;
     setIsSuggestionsLoading(true);
     const recentText = chunks
       .slice(-s.suggestionContextChunks)
@@ -178,6 +182,7 @@ export default function Home() {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load suggestions');
     } finally {
+      isFetchingRef.current = false;
       setIsSuggestionsLoading(false);
     }
   }, []);
@@ -219,6 +224,7 @@ export default function Home() {
       mediaStreamRef.current?.getTracks().forEach((t) => t.stop());
       mediaStreamRef.current = null;
       stopCountdown();
+      setRefreshCountdown(CHUNK_DURATION_MS / 1000);
       setIsRecording(false);
     } else {
       // Start
@@ -418,6 +424,7 @@ export default function Home() {
             isLoading={isSuggestionsLoading}
             refreshCountdown={refreshCountdown}
             isRecording={isRecording}
+            hasTranscript={transcriptChunks.length > 0}
             onRefresh={fetchSuggestions}
             onClickSuggestion={handleSuggestionClick}
           />
